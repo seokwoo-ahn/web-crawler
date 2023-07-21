@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
 
 func main() {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.AllowedDomains("https://etk.srail.kr", "etk.srail.kr"),
+	)
 
 	// Find and visit all links
 	c.OnHTML("table", func(e *colly.HTMLElement) {
@@ -20,6 +23,12 @@ func main() {
 		})
 	})
 
+	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+		if strings.Contains(e.Attr("href"), "selectScheduleList") {
+			e.Request.Visit(e.Attr("href"))
+		}
+	})
+
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
 	})
@@ -28,15 +37,16 @@ func main() {
 		"https://etk.srail.kr/hpg/hra/01/selectScheduleList.do?pageId=TK0101010000",
 		map[string]string{
 			"dptRsStnCd":      "0551",
-			"arvRsStnCd":      "0020",
+			"arvRsStnCd":      "0015",
 			"stlbTrnClsfCd":   "05",
 			"psgNum":          "1",
 			"seatAttCd":       "015",
 			"isRequest":       "Y",
+			"prvTms":          "000000",
 			"dptRsStnCdNm":    "수서",
-			"arvRsStnCdNm":    "부산",
-			"dptDt":           "20230720",
-			"dptTm":           "153500",
+			"arvRsStnCdNm":    "동대구",
+			"dptDt":           "20230722",
+			"dptTm":           "090500",
 			"chtnDvCd":        "1",
 			"psgInfoPerPrnb1": "1",
 			"psgInfoPerPrnb5": "0",
