@@ -5,10 +5,10 @@ import (
 )
 
 var Crawler *crawler.Crawler
+var StationCodes map[string]string
 
 func Init() {
 	Crawler, _ = crawler.NewCrawler()
-	Crawler.SetCrawler()
 }
 
 func main() {

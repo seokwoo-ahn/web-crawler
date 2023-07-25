@@ -49,7 +49,8 @@ func NewCrawler() (crawler *Crawler, err error) {
 		url:       url,
 	}
 
-	err = nil
+	crawler.SetCrawler()
+
 	return
 }
 
