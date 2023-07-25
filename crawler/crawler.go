@@ -24,11 +24,11 @@ func NewCrawler() (crawler *Crawler, err error) {
 		"psgNum":          "1",
 		"seatAttCd":       "015",
 		"isRequest":       "Y",
-		"prvTms":          "133000",
+		"prvTms":          "000000",
 		"dptRsStnCdNm":    "수서",
 		"arvRsStnCdNm":    "부산",
-		"dptDt":           "20230725",
-		"dptTm":           "133000",
+		"dptDt":           "20230817",
+		"dptTm":           "000000",
 		"chtnDvCd":        "1",
 		"psgInfoPerPrnb1": "1",
 		"psgInfoPerPrnb5": "0",
@@ -56,24 +56,30 @@ func NewCrawler() (crawler *Crawler, err error) {
 func (c *Crawler) SetCrawler() {
 	c.collector.OnHTML("table", func(e *colly.HTMLElement) {
 		count := 0
-		e.ForEach("tr > td > em.time", func(i int, elem *colly.HTMLElement) {
+		e.ForEach("tr > td > em.time", func(i int, elem1 *colly.HTMLElement) {
 			if i%2 == 0 {
-				fmt.Print(elem.Text + " ")
+				fmt.Print(elem1.Text + " ")
 			} else {
-				fmt.Println(elem.Text)
+				fmt.Println(elem1.Text)
 			}
 			count++
 		})
-		// if count != 20 {
-		// 	return
-		// } else {
-		// 	fmt.Println(e.Response.Ctx)
-		// 	e.Response.Ctx.ForEach(func(k string, v interface{}) interface{} {
-		// 		fmt.Println(k)
-		// 		fmt.Println(v)
-		// 		return v
-		// 	})
-		// }
+		if count != 20 {
+			return
+		} else {
+			e.ForEach("tr > td.trnNo > input[name]", func(j int, elem2 *colly.HTMLElement) {
+				if elem2.Attr("name") == "dptTm[0]" {
+					c.reqBody["prvTms"] = elem2.Attr("value")
+					fmt.Println("set prvTms", elem2.Attr("value"))
+				}
+
+				if elem2.Attr("name") == "dptTm[9]" {
+					c.reqBody["dptTm"] = elem2.Attr("value")
+					fmt.Println("set dptTm", elem2.Attr("value"))
+				}
+			})
+			c.collector.Post(c.url, c.reqBody)
+		}
 	})
 
 	// c.OnHTML("a[href]", func(e *colly.HTMLElement) {
