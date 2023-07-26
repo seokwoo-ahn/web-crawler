@@ -1,17 +1,20 @@
 package main
 
 import (
+	"flag"
+	"web-crawler/config"
 	"web-crawler/crawler"
 )
 
-var Crawler *crawler.Crawler
-var StationCodes map[string]string
+var srtCrawler *crawler.Crawler
+var configFlag = flag.String("config", "./config.toml", "configuration toml file path")
 
 func Init() {
-	Crawler, _ = crawler.NewCrawler()
+	config := config.NewConfig(*configFlag)
+	srtCrawler, _ = crawler.NewCrawler(config)
 }
 
 func main() {
 	Init()
-	Crawler.Run()
+	srtCrawler.Run()
 }

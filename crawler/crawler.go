@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"fmt"
+	"web-crawler/config"
 
 	"github.com/gocolly/colly"
 )
@@ -12,22 +13,28 @@ type Crawler struct {
 	url       string
 }
 
-func NewCrawler() (crawler *Crawler, err error) {
+func NewCrawler(config *config.Configs) (crawler *Crawler, err error) {
 	collector := colly.NewCollector(
 		colly.AllowedDomains("https://etk.srail.kr", "etk.srail.kr"),
 	)
 
+	fmt.Println(config.StationMap[config.DptStation])
+	fmt.Println(config.StationMap[config.ArvStation])
+	fmt.Println(config.DptStation)
+	fmt.Println(config.ArvStation)
+	fmt.Println(config.DptDay)
+
 	reqBody := map[string]string{
-		"dptRsStnCd":      "0551",
-		"arvRsStnCd":      "0020",
+		"dptRsStnCd":      config.StationMap[config.DptStation],
+		"arvRsStnCd":      config.StationMap[config.ArvStation],
 		"stlbTrnClsfCd":   "05",
 		"psgNum":          "1",
 		"seatAttCd":       "015",
 		"isRequest":       "Y",
 		"prvTms":          "000000",
-		"dptRsStnCdNm":    "수서",
-		"arvRsStnCdNm":    "부산",
-		"dptDt":           "20230817",
+		"dptRsStnCdNm":    config.DptStation,
+		"arvRsStnCdNm":    config.ArvStation,
+		"dptDt":           config.DptDay,
 		"dptTm":           "000000",
 		"chtnDvCd":        "1",
 		"psgInfoPerPrnb1": "1",
