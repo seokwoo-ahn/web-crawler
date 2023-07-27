@@ -5,6 +5,7 @@ import (
 	"web-crawler/config"
 
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/debug"
 )
 
 type Crawler struct {
@@ -18,11 +19,7 @@ func NewCrawler(config *config.Configs) (crawler *Crawler, err error) {
 		colly.AllowedDomains("https://etk.srail.kr", "etk.srail.kr"),
 	)
 
-	fmt.Println(config.StationMap[config.DptStation])
-	fmt.Println(config.StationMap[config.ArvStation])
-	fmt.Println(config.DptStation)
-	fmt.Println(config.ArvStation)
-	fmt.Println(config.DptDay)
+	collector.SetDebugger(&debug.LogDebugger{})
 
 	reqBody := map[string]string{
 		"dptRsStnCd":      config.StationMap[config.DptStation],
